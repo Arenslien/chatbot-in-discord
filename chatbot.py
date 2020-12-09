@@ -46,4 +46,4 @@ if __name__ == "__main__":
     client = chatbot()
     # TOKEN 값을 통해 로그인하고 봇을 실행
     # TOKEN 값은 디스코드 채팅 서버마다 값이 다름.
-    client.run("NzgwNjcwNjIyNDg5MTE2Njcz.X7yeLA.uCULxsbAAI8fnG-xw7ocP5f8v7U")
+    client.run("MyCode")
