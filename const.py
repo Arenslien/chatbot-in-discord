@@ -1,4 +1,8 @@
-# 태그 단어
+# const.py의 모든 코드는 github의 코드를 가져온 코드입니다.
+# 하나의 코드로 된 것을 분리한 코드입니다.
+# https://github.com/deepseasw/seq2seq_chatbot/blob/master/Seq2Seq%20Chatbot.ipynb
+
+# 단어 사전을 생성하고나서 첫 인덱스부터 들어갈 태그입니다.
 PAD = "<PADDING>"   # 패딩
 STA = "<START>"     # 시작
 END = "<END>"       # 끝

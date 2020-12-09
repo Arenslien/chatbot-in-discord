@@ -1,19 +1,34 @@
+# preprocess.py의 일부 코드는 github의 코드를 가져온 코드입니다.
+# 하나의 코드로 된 것을 분리한 코드입니다.
+# 전처리와 관련된 기능들을 수행하는 코드 입니다.
+# https://github.com/deepseasw/seq2seq_chatbot/blob/master/Seq2Seq%20Chatbot.ipynb
+
 from const import PAD, STA, END, OOV, ENCODER_INPUT, DECODER_INPUT, DECODER_TARGET, max_sequences, RE_FILTER, END_INDEX, OOV_INDEX
 import pandas as pd
 import numpy as np
 from re import sub
 from konlpy.tag import Okt
+import pickle
 
+
+# 해당 클래스는 github 코드의 전처리에 해당되는 부분을 클래스화 한 것입니다.
+# 전처리에 해당되는 코드를 구조화한 것이 직접 한 부분들입니다.
+# 세부 코드들은 github의 코드입니다.
 class Preprocessor:
     def __init__(self):
         pass
 
+    # 학습 데이터를 로드하기 위한 함수로 구조화만 했습니다.
+    # 해당 코드는 github의 코드입니다.
     def load_data(self, path):
         # 챗봇 데이터 로드
         self.chatbot_data = pd.read_csv(path, encoding='utf-8')
         question, answer = list(self.chatbot_data['Q']), list(self.chatbot_data['A'])
+
         return question, answer
 
+    # 입력되는 문장 리스트를 형태소 분석하기 위한 함수로 구조화만 했습니다.
+    # 해당 코드는 github의 코드입니다.
     def tokenize_ko(self, sentences):
         # KoNLPy 형태소 분석기 설정
         tagger = Okt()
@@ -32,6 +47,8 @@ class Preprocessor:
 
         return tokenized_sentences
 
+    # 형태소 분석이 된 리스트를 바탕으로 단어 사전을 만들기 위한 함수로 구조화만 했습니다.
+    # 해당 코드는 github의 코드입니다.
     def build_vocab(self, sentences):
         # 단어 배열 선언
         self.words = []
@@ -54,8 +71,19 @@ class Preprocessor:
         word_to_index = {word: index for index, word in enumerate(self.words)}
         index_to_word = {index: word for index, word in enumerate(self.words)}
 
+        # 직접 추가한 코드
+        # 기존의 코드는 예측 모델을 일회용으로 사용하기에 저장하지 않았습니다.
+        # 챗봇 모델은 단어 사전을 계속 사용하기에 단어 사전을 저장하는 코드입니다.
+        # word_to_index, index_to_word 저장
+        with open('./vocabulary/word_to_index.txt', 'wb') as f:
+            pickle.dump(word_to_index, f)
+        with open('./vocabulary/index_to_word.txt', 'wb') as f:
+            pickle.dump(index_to_word, f)
+
         return word_to_index, index_to_word
 
+    # 모델의 입력값을 위해 형태소 분석된 문장을 임베딩 하기 위한 함수로 구조화만 했습니다.
+    # 해당 코드는 github의 코드입니다.
     def convert_text_to_index(self, sentences, vocabulary, type):
         sentences_index = []
 
@@ -95,6 +123,8 @@ class Preprocessor:
 
         return np.asarray(sentences_index)
 
+    # 원 핫 인코딩을 위한 함수로 구조화만 했습니다.
+    # 해당 코드는 github의 코드입니다.
     def one_hot_encode(self, y_decoder):
         # 원핫인코딩 데이터 초기화
         one_hot_data = np.zeros((len(y_decoder), max_sequences, len(self.words)))
@@ -107,7 +137,8 @@ class Preprocessor:
 
         return one_hot_data
 
-    
+    # 인덱스화된 문장을 다시 문자열로 변환하는 함수로 구조화만 했습니다.
+    # 해당 코드는 github의 코드입니다.    
     # 인덱스를 문장으로 변환
     def convert_index_to_text(self, indexs, vocabulary): 
         
